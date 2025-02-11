@@ -9,8 +9,12 @@ then
     sudo apt install -y lsb-core
 fi
 
+# Install python-magic
+pip uninstall python-magic
+pip install python-magic
+
 # Temporary fix externally-managed-environment error
-sudo rm -r /usr/lib/python3.12/EXTERNALLY-MANAGED
+sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED
 
 # Installing binwalk
 echo "Installing binwalk"
@@ -34,9 +38,6 @@ sed -i '/REQUIRED_UTILS="wget tar python"/c\REQUIRED_UTILS="wget tar python3"' d
 wget https://github.com/ReFirmLabs/binwalk/pull/639.patch && patch -p1 < 639.patch && rm 639.patch
 
 
-
-
-https://github.com/AttifyOS/AttifyOS/releases/download/v4.0-iso/AttifyOS4.7z.004
 # Required as we are not installing ubi_reader using poetry
 pip install lzallright
 
@@ -85,13 +86,10 @@ tar xf qemu-system-static-3.0.0.tar.gz && rm qemu-system-static-3.0.0.tar.gz
 
 cd ..
 
-# Install python-magic
-pip uninstall python-magic
-pip install python-magic
-
 echo "====================================================="
 echo "Firmware Analysis Toolkit installed successfully!"
 echo "Before running fat.py for the first time,"
 echo "please edit fat.config and provide your sudo password"
 echo "====================================================="
+
 
