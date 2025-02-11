@@ -9,12 +9,11 @@ then
     sudo apt install -y lsb-core
 fi
 
-# Install python-magic
-pip uninstall python-magic
-pip install python-magic
-
 # Temporary fix externally-managed-environment error
-sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED
+FILE="/usr/lib/python3.12/EXTERNALLY-MANAGED"
+if [ -f "$FILE" ]; then
+    sudo rm "$FILE"
+fi
 
 # Installing binwalk
 echo "Installing binwalk"
@@ -86,10 +85,12 @@ tar xf qemu-system-static-3.0.0.tar.gz && rm qemu-system-static-3.0.0.tar.gz
 
 cd ..
 
+# Install python-magic
+pip uninstall python-magic
+pip install python-magic
+
 echo "====================================================="
 echo "Firmware Analysis Toolkit installed successfully!"
 echo "Before running fat.py for the first time,"
 echo "please edit fat.config and provide your sudo password"
 echo "====================================================="
-
-
