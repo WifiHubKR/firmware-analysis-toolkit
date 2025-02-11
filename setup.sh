@@ -9,9 +9,20 @@ then
     sudo apt install -y lsb-core
 fi
 
+# Temporary fix externally-managed-environment error
+sudo rm -r /usr/lib/python3.12/EXTERNALLY-MANAGED
+
+# Installing binwalk
 echo "Installing binwalk"
-git clone --depth=1 https://github.com/ReFirmLabs/binwalk.git
+wget https://github.com/ReFirmLabs/binwalk/archive/refs/tags/v2.3.4.tar.gz
+tar xzvf v2.3.4.tar.gz
+rm -r v2.3.4.tar.gz
+mv binwalk-2.3.4/ binwalk/ 
 cd binwalk
+
+# Fix import imp to import importlib as imp for python version issue
+sed -i 's/import imp/import importlib as imp/g' ./src/binwalk/core/plugin.py
+sed -i 's/import imp/import importlib as imp/g' ./src/binwalk/core/module.py
 
 # Temporary fix for sasquatch failing to install (From https://github.com/ReFirmLabs/binwalk/pull/601)
 sed -i 's;\$SUDO ./build.sh;wget https://github.com/devttys0/sasquatch/pull/47.patch \&\& patch -p1 < 47.patch \&\& \$SUDO ./build.sh;' deps.sh
@@ -22,6 +33,10 @@ sed -i '/REQUIRED_UTILS="wget tar python"/c\REQUIRED_UTILS="wget tar python3"' d
 # Fix for ubi_reader change of branch name + switching to poetry
 wget https://github.com/ReFirmLabs/binwalk/pull/639.patch && patch -p1 < 639.patch && rm 639.patch
 
+
+
+
+https://github.com/AttifyOS/AttifyOS/releases/download/v4.0-iso/AttifyOS4.7z.004
 # Required as we are not installing ubi_reader using poetry
 pip install lzallright
 
@@ -55,6 +70,8 @@ chmod +x reset.py
 # Set firmadyne_path in fat.config
 sed -i "/firmadyne_path=/c\firmadyne_path=$firmadyne_dir" fat.config
 
+
+
 cd qemu-builds
 
 wget -O qemu-system-static-2.0.0.zip "https://github.com/attify/firmware-analysis-toolkit/files/9937453/qemu-system-static-2.0.0.zip"
@@ -68,8 +85,13 @@ tar xf qemu-system-static-3.0.0.tar.gz && rm qemu-system-static-3.0.0.tar.gz
 
 cd ..
 
+# Install python-magic
+pip uninstall python-magic
+pip install python-magic
+
 echo "====================================================="
 echo "Firmware Analysis Toolkit installed successfully!"
 echo "Before running fat.py for the first time,"
 echo "please edit fat.config and provide your sudo password"
 echo "====================================================="
+
