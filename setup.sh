@@ -86,8 +86,8 @@ tar xf qemu-system-static-3.0.0.tar.gz && rm qemu-system-static-3.0.0.tar.gz
 cd ..
 
 # Install python-magic
-pip uninstall python-magic
-pip install python-magic
+pip uninstall --yes python-magic
+pip install -q python-magic
 
 echo "====================================================="
 echo "Firmware Analysis Toolkit installed successfully!"
